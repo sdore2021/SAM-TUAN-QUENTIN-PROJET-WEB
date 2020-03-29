@@ -28,7 +28,14 @@ const NavBar = ({ user }) => {
           <li>
             <Link to="/LoginAdmin">AdminPage</Link>
           </li>
-          {user && <React.Fragment>{user.name}</React.Fragment>}
+          {user && (
+            <React.Fragment>
+              {user.name}{" "}
+              <li>
+                <Link to="/LogoutAdmin">Logout</Link>
+              </li>
+            </React.Fragment>
+          )}
         </ul>
       </div>
     </nav>

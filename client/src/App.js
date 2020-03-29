@@ -29,11 +29,11 @@ class App extends Component {
   }
 
   render() {
-    const { user } = this.state;
+    const { user: USER } = this.state;
     return (
       <BrowserRouter>
         <div className="App">
-          <Navbar USER={user} />
+          <Navbar user={USER} />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/cart" component={Cart} />

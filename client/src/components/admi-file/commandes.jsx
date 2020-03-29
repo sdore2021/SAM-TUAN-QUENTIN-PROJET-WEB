@@ -14,7 +14,7 @@ class Commandes extends Component {
 
   totalCost(commande) {
     /* A FINIR */
-    let sum=0;
+    let sum = 0;
     return sum;
   }
 
@@ -34,9 +34,13 @@ class Commandes extends Component {
             <tr>
               <td>{commande.date_commande}</td>
               <td>{commande.clientId}</td>
-              <td>{commande.articles.map( a => {
-                <div>{a.title} (x{a.quantiteOrdered})</div>
-              })}</td>
+              <td>
+                {commande.articles.map(a => {
+                  <div>
+                    {a.title} (x{a.quantiteOrdered})
+                  </div>;
+                })}
+              </td>
               <td>{this.totalCost(commande)}</td>
             </tr>
           ))}
