@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Button, Card } from "react-bootstrap";
 
 const CardA = ({ name, count, link }) => {

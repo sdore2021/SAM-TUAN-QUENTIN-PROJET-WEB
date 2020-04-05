@@ -21,7 +21,8 @@ exports.userAdm_create = async function(req, res, next) {
   userAdm = new UserAdm({
     name: req.body.name,
     email: req.body.email,
-    password: password_hash
+    password: password_hash,
+    isAdmin: req.body.isAdmin
   });
 
   const token = userAdm.generateAuthToken();
@@ -30,8 +31,11 @@ exports.userAdm_create = async function(req, res, next) {
     if (err) {
       return next(err);
     }
-    res
-      .header("x-header-token", token)
-      .send({ _id: userAdm._id, name: userAdm.name, email: userAdm.email });
+    res.header("x-header-token", token).send({
+      _id: userAdm._id,
+      name: userAdm.name,
+      email: userAdm.email,
+      isAdmin: userAdm.isAdmin
+    });
   });
 };

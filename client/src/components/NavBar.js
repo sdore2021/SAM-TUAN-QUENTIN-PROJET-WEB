@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-const NavBar = ({ user }) => {
+const NavBar = ({ user, isAdmin }) => {
   return (
     <nav className="light-blue lighten-1" role="navigation">
       <div className="nav-wrapper container">
@@ -9,7 +9,7 @@ const NavBar = ({ user }) => {
         </Link>
 
         <ul className="right">
-          {!user && (
+          {!isAdmin && (
             <React.Fragment>
               <li>
                 <Link to="/">Shop</Link>
@@ -26,16 +26,15 @@ const NavBar = ({ user }) => {
             </React.Fragment>
           )}
           <li>
-            <Link to="/LoginAdmin">AdminPage</Link>
+            <Link to="/LoginAdmin">Login</Link>
           </li>
-          {user && (
-            <React.Fragment>
-              {user.name}{" "}
-              <li>
-                <Link to="/LogoutAdmin">Logout</Link>
-              </li>
-            </React.Fragment>
-          )}
+          <li>
+            <Link to="/CreateNewAdmin">Register</Link>
+          </li>
+          <li>
+            <Link to="/LogoutAdmin">Logout</Link>
+          </li>
+          <li>{user && user.name}</li>
         </ul>
       </div>
     </nav>

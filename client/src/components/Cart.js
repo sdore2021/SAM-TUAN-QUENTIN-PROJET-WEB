@@ -25,6 +25,7 @@ class Cart extends Component {
 
   render() {
     let addedItemsArray = this.props.items;
+    console.log(addedItemsArray); //donnée article
 
     let handleToken = async (token, addresses) => {
       // Send a request to server url: http://127.0.0.1:3002/users/checkout

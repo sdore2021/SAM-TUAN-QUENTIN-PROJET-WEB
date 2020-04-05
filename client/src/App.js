@@ -1,21 +1,23 @@
 import jwtDecode from "jwt-decode";
 import React, { Component } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import Home from "./components/Home";
 import Cart from "./components/Cart";
-import LoginForm from "./components/admi-file/loginForm";
-import AdminHome from "./components/admi-file/adminHome";
-import RegisterAdim from "./components/admi-file/registerAdmin";
-import LogoutAdmin from "./components/admi-file/logoutAdmin";
-import CardA from "./components/admi-file/cards";
 
+import LoginForm from "./components/commum/loginForm";
+import RegisterUser from "./components/commum/registerUser";
+import LogoutAdmin from "./components/commum/logout";
+
+import AdminHome from "./components/admi-file/adminHome";
 import Articles from "./components/admi-file/articles";
 import Commandes from "./components/admi-file/commandes";
 import Clients from "./components/admi-file/clients";
 import Depots from "./components/admi-file/depots";
 import Factures from "./components/admi-file/factures";
 import Livraisons from "./components/admi-file/livraisons";
+
+import Drop from "./components/admi-file/dropdown";
 
 class App extends Component {
   state = {};
@@ -24,23 +26,24 @@ class App extends Component {
     try {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
-      this.setState({ user });
+      const isAdmin = user.isAdmin;
+      this.setState({ user, isAdmin });
     } catch (ex) {}
   }
 
   render() {
-    const { user: USER } = this.state;
+    const { user: USER, isAdmin: ISADMIN } = this.state;
     return (
       <BrowserRouter>
         <div className="App">
-          <Navbar user={USER} />
+          <Navbar user={USER} isAdmin={ISADMIN} />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/cart" component={Cart} />
             <Route path="/LoginAdmin" component={LoginForm} />
             <Route path="/LogoutAdmin" component={LogoutAdmin} />
             <Route path="/AdminHome" component={AdminHome} />
-            <Route path="/CreateNewAdmin" component={RegisterAdim} />
+            <Route path="/CreateNewAdmin" component={RegisterUser} />
             <Route path="/Article" component={Articles} />
             <Route path="/Commande" component={Commandes} />
             <Route path="/Client" component={Clients} />

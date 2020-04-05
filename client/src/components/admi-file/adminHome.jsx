@@ -1,4 +1,3 @@
-import jwtDecode from "jwt-decode";
 import axios from "axios";
 import React, { Component } from "react";
 import NavBar from "./navBar";
@@ -41,7 +40,7 @@ class AdminHome extends Component {
               </h1>
               <CardA name={"Client"} count={client} link={"/"} />
               <CardA name={"Article"} count={article} link={"/Article"} />
-              <CardA name={"Commande"} count={commande} link={"/"} />
+              <CardA name={"Commande"} count={commande} link={"/Commande"} />
               <CardA name={"Depot"} count={depot} link={"/"} />
               <CardA name={"Facture"} count={50} link={"/"} />
               <CardA name={"Taux"} count={20} link={"/"} />

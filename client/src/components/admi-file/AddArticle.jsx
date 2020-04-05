@@ -5,9 +5,9 @@ import { auth } from "./auth";
 import { Button, Modal } from "react-bootstrap";
 
 class AddArticle extends Component {
-  constructor(props) {
+  /*constructor(props) {
     super(props);
-  }
+  }*/
 
   state = {
     article: { title: "", price: "", depot: "" },
@@ -62,6 +62,7 @@ class AddArticle extends Component {
       })
       .then(res => {
         console.log("article was created");
+        window.location.reload(false);
       })
       .catch(ex => {
         console.log(ex);
@@ -131,6 +132,7 @@ class AddArticle extends Component {
                   id="depot"
                   type="text"
                   className="form-control"
+                  placeholder="EX : 5e7f7172782e7e200c7aaa79"
                 />
                 {this.state.errors.depot && (
                   <div className="alert alert-danger">
@@ -138,16 +140,18 @@ class AddArticle extends Component {
                   </div>
                 )}
               </div>
-              <button className="btn btn-primary">Submit</button>
+              <button
+                className="btn btn-primary"
+                style={{ margin: "0 30px 0 0" }}
+              >
+                Submit
+              </button>
+              <Button variant="danger" onClick={this.props.onHide}>
+                Close
+              </Button>
             </form>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <button className="btn btn-primary">Submit</button>
-          <Button variant="danger" onClick={this.props.onHide}>
-            Close
-          </Button>
-        </Modal.Footer>
       </Modal>
     );
   }

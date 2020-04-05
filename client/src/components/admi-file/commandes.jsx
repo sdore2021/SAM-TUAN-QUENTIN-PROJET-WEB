@@ -23,6 +23,7 @@ class Commandes extends Component {
       <table className="table">
         <thead>
           <tr>
+            <th>ID Commande</th>
             <th>Date commande</th>
             <th>ID du client</th>
             <th>Articles</th>
@@ -31,15 +32,41 @@ class Commandes extends Component {
         </thead>
         <tbody>
           {this.state.commandes.map(commande => (
-            <tr>
+            <tr key={commande._id}>
+              <td>{commande._id}</td>
               <td>{commande.date_commande}</td>
               <td>{commande.clientId}</td>
               <td>
-                {commande.articles.map(a => {
-                  <div>
-                    {a.title} (x{a.quantiteOrdered})
-                  </div>;
-                })}
+                <span className="dropdown">
+                  <button
+                    className="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    onClick={() => {
+                      <React.Fragment>
+                        <span
+                          className="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <a className="dropdown-item" href="#">
+                            Action
+                          </a>
+                          <a className="dropdown-item" href="#">
+                            Another action
+                          </a>
+                          <a className="dropdown-item" href="#">
+                            Something else here
+                          </a>
+                        </span>
+                      </React.Fragment>;
+                    }}
+                  >
+                    voir-articles
+                  </button>
+                </span>
               </td>
               <td>{this.totalCost(commande)}</td>
             </tr>
@@ -51,3 +78,6 @@ class Commandes extends Component {
 }
 
 export default Commandes;
+
+/*
+{commande.articles.map(a => {})} */

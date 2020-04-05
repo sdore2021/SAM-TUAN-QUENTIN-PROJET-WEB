@@ -1,21 +1,18 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Joi from "joi-browser";
+import jwtDecode from "jwt-decode";
 
-//axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
-class LoginForm extends Component {
+class RegisterUser extends Component {
   state = {
-    account: { username: "", password: "" },
-    errors: {}
+    account: { username: "", password: "", name: "" },
+    errors: {},
   };
 
   schema = {
-    username: Joi.string()
-      .required()
-      .label("Username"),
-    password: Joi.string()
-      .required()
-      .label("Password")
+    username: Joi.string().required().email().min(5).label("Username"),
+    password: Joi.string().required().min(5).label("Password"),
+    name: Joi.string().required().min(5).label("name"),
   };
 
   handleChange = ({ currentTarget: input }) => {
@@ -26,7 +23,7 @@ class LoginForm extends Component {
 
   validate() {
     const result = Joi.validate(this.state.account, this.schema, {
-      abortEarly: false
+      abortEarly: false,
     });
     if (!result.error) return null;
 
@@ -36,66 +33,59 @@ class LoginForm extends Component {
     return errors;
   }
 
-  login = (email, password) => {
-    axios.post("http://localhost:4000/gestions/auth", {
-      email,
-      password
-    });
-  };
+  handleUser() {
+    try {
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      if (user.isAdmin === true) return true;
+      else return false;
+    } catch (ex) {
+      return false;
+    }
+  }
 
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(this.state);
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (errors) return;
 
     // call the server
-    const { username: email, password } = this.state.account;
-    //await this.login(account.username, account.password);
-    await axios
-      .post("http://localhost:4000/gestions/auth", {
-        email,
-        password
-      })
-      .then(res => {
-        console.log("authentification reussi");
-        // all browsers have this database name localStorage
-        const jwt = res.data;
-        localStorage.setItem("token", jwt);
-        //this.props.history.push("/AdminHome"); // permet de naviguer
-        window.location = "/AdminHome";
-      })
-      .catch(ex => {
-        if (ex.response && ex.response.status === 400) {
-          this.setState({
-            errors: { username: ex.response.data }
-          });
-        }
-      });
-  };
+    const { username: email, password, name } = this.state.account;
 
-  /*async componentDidMount() {
-    // adminsteur par defaut ajouter automatiquement sans le postman
-    // c'est pour facilité le test que j'ai ajouter adminstrateur par defaut
-    // mais normalement non
+    // isAdmin true or false
+    let isAdmin = false;
+    isAdmin = this.handleUser();
+
+    console.log(this.state.account);
     await axios
       .post("http://localhost:4000/gestions/createUserAdm", {
-        name: "samouka",
-        email: "samouka.dore@insa-cvl.fr",
-        password: "azerty"
+        name,
+        email,
+        password,
+        isAdmin,
       })
-      .then(res => {
-        console.log("create default admin is succesful");
+      .then((res) => {
+        console.log("create new admin succesful");
+        this.props.history.push("/");
       })
-      .catch({});
-  }*/
+      .catch((ex) => {
+        if (ex.response && ex.response.status === 400) {
+          this.setState({
+            errors: { username: ex.response.data },
+          });
+        }
+        console.log(ex.response);
+      });
+  };
 
   render() {
     return (
       <main className="container">
         <div>
-          <h1>Login</h1>
+          {this.handleUser() && <h1>Register new Admin</h1>}
+          {!this.handleUser() && <h1>Register new Client</h1>}
           <form onSubmit={this.handleSubmit}>
             <div className="form-group">
               <label htmlFor="username">Username</label>
@@ -110,6 +100,22 @@ class LoginForm extends Component {
               {this.state.errors.username && (
                 <div className="alert alert-danger">
                   {this.state.errors.username}
+                </div>
+              )}
+            </div>
+            <div className="form-group">
+              <label htmlFor="name">name</label>
+              <input
+                value={this.state.account.name}
+                onChange={this.handleChange}
+                name="name"
+                id="name"
+                type="text"
+                className="form-control"
+              />
+              {this.state.errors.name && (
+                <div className="alert alert-danger">
+                  {this.state.errors.name}
                 </div>
               )}
             </div>
@@ -129,9 +135,7 @@ class LoginForm extends Component {
                 </div>
               )}
             </div>
-            <button disabled={this.validate()} className="btn btn-primary">
-              Login
-            </button>
+            <button className="btn btn-primary">Create</button>
           </form>
         </div>
       </main>
@@ -139,4 +143,4 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm;
+export default RegisterUser;

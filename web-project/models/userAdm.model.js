@@ -23,12 +23,13 @@ let UserAdmSchema = new Schema({
     required: true,
     minlength: 5,
     maxlength: 1024
-  }
+  },
+  isAdmin: { type: Boolean, required: true }
 });
 
 UserAdmSchema.methods.generateAuthToken = function() {
   const token = jwt.sign(
-    { _id: this._id, name: this.name },
+    { _id: this._id, name: this.name, isAdmin: this.isAdmin },
     "jwtPrivateKey" //config.get("jwtPrivateKey")
   );
 
@@ -49,7 +50,8 @@ function validateUserAdmin(userAdm) {
     password: Joi.string()
       .min(5)
       .max(1024)
-      .required()
+      .required(),
+    isAdmin: Joi.boolean().required()
   };
   return Joi.validate(userAdm, schema);
 }
