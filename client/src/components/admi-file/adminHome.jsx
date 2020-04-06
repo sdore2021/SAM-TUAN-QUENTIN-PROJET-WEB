@@ -10,14 +10,14 @@ class AdminHome extends Component {
     article: "0",
     client: "0",
     commande: "0",
-    depot: "0"
+    depot: "0",
   };
 
   componentDidMount() {
     // ineficace mais pour le moment c bon je ferai apres dans app.js
     this.setState({ user: auth() });
 
-    axios.get("http://localhost:4000/gestions/getArticle").then(res => {
+    axios.get("http://localhost:4000/gestions/getArticle").then((res) => {
       const article = res.data.length;
       this.setState({ article });
     });
@@ -33,7 +33,7 @@ class AdminHome extends Component {
             <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
               <h1
                 style={{
-                  padding: "30px 10px"
+                  padding: "30px 10px",
                 }}
               >
                 Wellcome to administrator page (M. ou Mme) {user && user.name}

@@ -18,9 +18,9 @@ class Checkout extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    total: state.total
+    total: state.total,
   };
 };
 

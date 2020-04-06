@@ -17,8 +17,6 @@ import Depots from "./components/admi-file/depots";
 import Factures from "./components/admi-file/factures";
 import Livraisons from "./components/admi-file/livraisons";
 
-import Drop from "./components/admi-file/dropdown";
-
 class App extends Component {
   state = {};
 

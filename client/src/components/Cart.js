@@ -3,44 +3,103 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
+
 import {
   addQuantity,
   subtractQuantity,
-  removeItem
+  removeItem,
 } from "../actions/cartActions";
 
 class Cart extends Component {
   //to add the quantity
-  handleAddQuantity = id => {
+  handleAddQuantity = (id) => {
     this.props.addQuantity(id);
   };
   //to substruct from the quantity
-  handleSubtractQuantity = id => {
+  handleSubtractQuantity = (id) => {
     this.props.subtractQuantity(id);
   };
   //to remove the item
-  handleRemove = id => {
+  handleRemove = (id) => {
     this.props.removeItem(id);
   };
 
   render() {
     let addedItemsArray = this.props.items;
-    console.log(addedItemsArray); //donnée article
 
     let handleToken = async (token, addresses) => {
+      /**
       // Send a request to server url: http://127.0.0.1:3002/users/checkout
-      const response = await axios.post(
+      /* const response = await axios.post(
         "http://127.0.0.1:3002/users/checkout",
         {
           token,
           addedItemsArray
         }
-      );
-      console.log(response);
+      );*/
+
+      var ID_client = "";
+      try {
+        const jwt = localStorage.getItem("token");
+        const user = jwtDecode(jwt);
+        if (user) {
+          ID_client = user._id;
+          // console.log("clientID => " + ID_client);
+        } else {
+          console.log("please login first");
+          window.location = "/LoginAdmin";
+        }
+      } catch (ex) {
+        console.log("please login first");
+        window.location = "/LoginAdmin";
+      }
+
+      // le premier un post et les autres sont put.
+      let nb_commande = addedItemsArray.length;
+      const commande = {
+        _id_client: ID_client,
+        articles: {
+          articleId: "5e7f8ec1040a3133609f1abd", //addedItemsArray[0].id
+          quantiteOrdered: addedItemsArray[0].quantity,
+        },
+      };
+      await axios
+        .post("http://localhost:4000/gestions/createCommande", commande)
+        .then((res) => {
+          console.log("article was created");
+          console.log(res);
+          console.log(nb_commande);
+          const url =
+            "http://localhost:4000/gestions/ArticleAddCommand/" + res.data._id;
+          //console.log(url);
+          for (let pas = 1; pas < nb_commande; pas++) {
+            axios
+              .put(url, {
+                articles: {
+                  articleId: "5e537f0f0853551e308ccec1", //addedItemsArray[pas].id
+                  quantiteOrdered: addedItemsArray[pas].quantity,
+                },
+              })
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((ex) => {
+                console.log(ex);
+              });
+          }
+        })
+        .catch((ex) => {
+          console.log(ex);
+        });
+
+      console.log("send to server here");
+      return null;
+      //console.log(response);
     };
 
     let addedItems = this.props.items.length ? (
-      this.props.items.map(item => {
+      this.props.items.map((item) => {
         return (
           <li className="collection-item avatar" key={item.id}>
             <div className="item-img">
@@ -125,24 +184,24 @@ class Cart extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     items: state.addedItems,
-    total: state.total
+    total: state.total,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    removeItem: id => {
+    removeItem: (id) => {
       dispatch(removeItem(id));
     },
-    addQuantity: id => {
+    addQuantity: (id) => {
       dispatch(addQuantity(id));
     },
-    subtractQuantity: id => {
+    subtractQuantity: (id) => {
       dispatch(subtractQuantity(id));
-    }
+    },
   };
 };
 
