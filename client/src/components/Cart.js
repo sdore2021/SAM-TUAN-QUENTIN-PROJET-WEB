@@ -25,20 +25,20 @@ class Cart extends Component {
     this.props.removeItem(id);
   };
 
+  componentDidMount() {
+    try {
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      if (!user) window.location = "/LoginAdmin";
+    } catch (error) {
+      window.location = "/LoginAdmin";
+    }
+  }
+
   render() {
     let addedItemsArray = this.props.items;
 
     let handleToken = async (token, addresses) => {
-      /**
-      // Send a request to server url: http://127.0.0.1:3002/users/checkout
-      /* const response = await axios.post(
-        "http://127.0.0.1:3002/users/checkout",
-        {
-          token,
-          addedItemsArray
-        }
-      );*/
-
       var ID_client = "";
       try {
         const jwt = localStorage.getItem("token");
@@ -94,6 +94,7 @@ class Cart extends Component {
         });
 
       console.log("send to server here");
+      window.location = "/";
       return null;
       //console.log(response);
     };

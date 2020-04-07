@@ -16,6 +16,8 @@ import Clients from "./components/admi-file/clients";
 import Depots from "./components/admi-file/depots";
 import Factures from "./components/admi-file/factures";
 import Livraisons from "./components/admi-file/livraisons";
+import Users from "./components/admi-file/users";
+import RefusePage from "./components/admi-file/refusePage";
 
 class App extends Component {
   state = {};
@@ -48,6 +50,8 @@ class App extends Component {
             <Route path="/Depot" component={Depots} />
             <Route path="/Facture" component={Factures} />
             <Route path="/Livraison" component={Livraisons} />
+            <Route path="/Users" component={Users} />
+            <Route path="/RefusePage" component={RefusePage} />
           </Switch>
         </div>
       </BrowserRouter>

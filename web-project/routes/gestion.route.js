@@ -20,6 +20,8 @@ router.get("/test", taut_tva_controller.test);
 router.get("/getUserAdm/me", auth, userAdm_controller.userAdm_get); // auth ici =>  authorization
 router.post("/createUserAdm", userAdm_controller.userAdm_create); // mettre option auth ici
 router.post("/auth", auth_controller.userAdm_auth); // auth ici => authentification
+router.get("/getUsers", userAdm_controller.getUserAll);
+router.delete("/deleteUser/:id", userAdm_controller.deleteUser);
 
 // all about client
 router.post("/createClient", client_controller.client_create);

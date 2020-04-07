@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { auth } from "./auth";
 
 class Commandes extends Component {
   state = {
-    commandes: []
+    commandes: [],
   };
   async componentDidMount() {
-    axios.get("http://localhost:4000/gestions/getCommande").then(res => {
+    auth();
+
+    axios.get("http://localhost:4000/gestions/getCommande").then((res) => {
       const commandes = res.data;
       this.setState({ commandes });
     });
@@ -18,7 +21,19 @@ class Commandes extends Component {
     return sum;
   }
 
+  handleDelete(commande) {
+    var url = "http://localhost:4000/gestions/deleteCommande/" + commande._id;
+    console.log(url);
+    axios.delete(url).then((res) => {
+      console.log(res);
+      console.log(res.data);
+    });
+
+    window.location.reload(false);
+  }
+
   render() {
+    console.log(this.state.commandes);
     return (
       <table className="table">
         <thead>
@@ -26,49 +41,26 @@ class Commandes extends Component {
             <th>ID Commande</th>
             <th>Date commande</th>
             <th>ID du client</th>
-            <th>Articles</th>
+            <th>Nb Articles</th>
             <th>Coût total</th>
           </tr>
         </thead>
         <tbody>
-          {this.state.commandes.map(commande => (
+          {this.state.commandes.map((commande) => (
             <tr key={commande._id}>
               <td>{commande._id}</td>
               <td>{commande.date_commande}</td>
               <td>{commande.clientId}</td>
-              <td>
-                <span className="dropdown">
-                  <button
-                    className="btn btn-secondary dropdown-toggle"
-                    type="button"
-                    id="dropdownMenuButton"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    onClick={() => {
-                      <React.Fragment>
-                        <span
-                          className="dropdown-menu"
-                          aria-labelledby="dropdownMenuButton"
-                        >
-                          <a className="dropdown-item" href="#">
-                            Action
-                          </a>
-                          <a className="dropdown-item" href="#">
-                            Another action
-                          </a>
-                          <a className="dropdown-item" href="#">
-                            Something else here
-                          </a>
-                        </span>
-                      </React.Fragment>;
-                    }}
-                  >
-                    voir-articles
-                  </button>
-                </span>
-              </td>
+              <td>{commande.articles.length}</td>
               <td>{this.totalCost(commande)}</td>
+              <th>
+                <button
+                  onClick={() => this.handleDelete(commande)}
+                  className="btn btn-danger btn-sm"
+                >
+                  Delete
+                </button>
+              </th>
             </tr>
           ))}
         </tbody>
@@ -78,6 +70,3 @@ class Commandes extends Component {
 }
 
 export default Commandes;
-
-/*
-{commande.articles.map(a => {})} */

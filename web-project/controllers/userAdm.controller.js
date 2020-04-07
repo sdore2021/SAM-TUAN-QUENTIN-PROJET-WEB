@@ -2,12 +2,12 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt"); //marche avec version 12.x de nodejs
 const { UserAdm, validate } = require("../models/userAdm.model");
 
-exports.userAdm_get = async function(req, res) {
+exports.userAdm_get = async function (req, res) {
   const userAdm = await UserAdm.findById(req.userAdm._id).select("-password");
   res.send(userAdm);
 };
 
-exports.userAdm_create = async function(req, res, next) {
+exports.userAdm_create = async function (req, res, next) {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -22,12 +22,12 @@ exports.userAdm_create = async function(req, res, next) {
     name: req.body.name,
     email: req.body.email,
     password: password_hash,
-    isAdmin: req.body.isAdmin
+    isAdmin: req.body.isAdmin,
   });
 
   const token = userAdm.generateAuthToken();
 
-  userAdm.save(function(err) {
+  userAdm.save(function (err) {
     if (err) {
       return next(err);
     }
@@ -35,7 +35,23 @@ exports.userAdm_create = async function(req, res, next) {
       _id: userAdm._id,
       name: userAdm.name,
       email: userAdm.email,
-      isAdmin: userAdm.isAdmin
+      isAdmin: userAdm.isAdmin,
     });
+  });
+};
+
+// pas necessaire
+
+exports.getUserAll = function (req, res) {
+  UserAdm.find(function (err, user) {
+    if (err) return next(err);
+    res.send(user);
+  });
+};
+
+exports.deleteUser = function (req, res) {
+  UserAdm.findByIdAndDelete(req.params.id, function (err, user) {
+    if (err) res.send(err);
+    res.json(user);
   });
 };
